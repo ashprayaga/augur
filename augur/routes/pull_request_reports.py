@@ -1910,3 +1910,17 @@ def create_routes(server):
 
         # return sendfile(newt)
         return send_file(filename)
+
+    @server.app.route('/{}/pull_request_reports/new_request/'.format(server.api_version), methods=["GET"])
+    def new_request():
+        p = figure(plot_width=100, plot_height=300,
+                   title="{} Mean Duration (Days) {} Pull Requests",
+                   toolbar_location=None, tools="")
+        p = figure(width=100, height=200)
+        caption = "This graph shows the average duration of all closed pull requests. " \
+            "Red represents a slow response relative to the others, while blue a light blue " \
+            "represents a fast response relative to the others. Blank cells represents months " \
+            "without pull requests."
+        grid = gridplot([[p], [caption]])
+        filename = export_png(grid, timeout=100)
+        return send_file(filename)
